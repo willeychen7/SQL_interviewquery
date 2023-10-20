@@ -1,0 +1,39 @@
+Given the tables users and rides, write a query to report the distance traveled by each user in descending order.
+
+Example:
+Input:
+users table
+-----------------+
+Column |	Type   |
+-----------------+
+id	   | INTEGER |
+name	 | INTEGER |
+-----------------+
+
+rides table
+----------------------------+
+Column            | Type    |
+----------------------------+
+id	              | INTEGER |
+passenger_user_id	| INTEGER |
+distance	        | FLOAT   |
+----------------------------+
+Output:
+----------------------------+
+Column	          | Type    |
+----------------------------+
+name	            | VARCHAR |
+distance_traveled	| FLOAT   |
+----------------------------+
+
+
+SOLUTION.
+SELECT 
+    name,
+    COALESCE(SUM(distance),0) AS distance_traveled
+    
+FROM users u
+LEFT JOIN rides r 
+ON u.id = r.passenger_user_id
+GROUP BY name
+ORDER BY distance DESC
