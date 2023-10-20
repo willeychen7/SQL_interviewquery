@@ -1,0 +1,51 @@
+Given a table called user_experiences, write a query to determine the percentage of users that held the title of “Data Analyst” immediately before holding the title “Data Scientist”.
+
+Immediate is defined as the user holding no other titles between the “Data Analyst” and “Data Scientist” roles.
+
+Example:
+Input:
+user_experiences table
+----------------------
+Column	     |Type
+id	         |INTEGER
+position_name|VARCHAR
+start_date	 |DATETIME
+end_date	   |DATETIME
+user_id	     |INTEGER
+----------------------
+Output:
+
+Column	Type
+percentage	FLOAT
+
+#####################################################################################################################################################
+1. Build a new column called previos_role that shows the last role held by each user.
+   LAG()...OVER(PARTITION BY  ...)
+2. Once we have a table with position_name and previous_role as columns, we can find the users who satisfy our condition.
+   WHERE... AND ...
+3. Find the ratio between the number of users who satisfy our condition and the total number of users in the user_experiences table.
+   COUNT(DISTINCT...)/COUNT(DISTINCT...) 
+#####################################################################################################################################################
+
+SOLTUION:
+WITH added_previous_role AS (
+  SELECT user_id, position_name,
+  LAG (position_name) 
+  OVER (PARTITION BY user_id) 
+  AS previous_role
+  FROM user_experiences
+),
+ 
+experienced_subset AS (
+  SELECT *
+  FROM added_previous_role
+  WHERE position_name = 'Data Scientist' 
+    AND previous_role = 'Data Analyst'
+)
+ 
+SELECT COUNT(DISTINCT experienced_subset.user_id)/
+     COUNT(DISTINCT user_experiences.user_id) 
+AS percentage
+FROM user_experiences
+LEFT JOIN experienced_subset 
+    ON user_experiences.user_id = experienced_subset.user_id
