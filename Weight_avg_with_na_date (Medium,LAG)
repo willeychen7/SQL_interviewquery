@@ -1,0 +1,49 @@
+The analytics team at a social media platform wants to analyze the short-term trends in daily user growth. 
+For this task, they want you to calculate the "3-day rolling weighted average" for "new daily users", 
+where the "current day has a weight of 3", 
+"the previous day has a weight of 2", and 
+"the day before has a weight of 1".
+
+The platform logs new records into the acquisitions table for the days on which new users arrive. Otherwise, it skips the date.
+
+Write a SQL query to
+1.calculate the 3-day rolling weighted average for 
+2.new daily users from the acquisitions table.
+3.Round the average to two decimal places.
+
+Example:
+Input:
+acquisitions table
+----------------------+
+Column      |	Type    |
+----------------------+
+date        |	DATE    |
+----------------------+
+new_users	  | DECIMAL |
+----------------------+
+Output:
+----------------------------+
+Column           |	Type    |
+----------------------------+
+date             |	DATE    |
+----------------------------+
+weighted_average | DECIMAL  |
+----------------------------+
+
+
+SOLUTION (USE LAG(...) OVER(...) FUNCTION, AND ROUND FUNCTION)
+WITH cte AS (
+    SELECT
+        date,
+        new_users,
+        LAG(new_users, 1) OVER (ORDER BY date) AS lag_user1,
+        LAG(new_users, 2) OVER (ORDER BY date) AS lag_user2
+    FROM acquisitions
+)
+
+SELECT
+    date,
+    ROUND((3*new_users+2*lag_user1+lag_user2)/6,2) AS weighted_average
+FROM cte
+WHERE 3*new_users+2*lag_user1+lag_user2 IS NOT NULL
+
