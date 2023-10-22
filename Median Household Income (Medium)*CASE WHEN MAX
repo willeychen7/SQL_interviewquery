@@ -1,0 +1,77 @@
+A marketing company is conducting a survey on household incomes in various cities. 
+Now they’re asking for your help with analytics.
+Write a SQL query to compute the median household income for each city.
+
+Note: Assume that the median is the middle value in an odd set of numbers, and the average of the two middle numbers in an even set.
+
+Example:
+Input:
+survey_responses table
+----------------------------+
+Column	          | Type    |
+----------------------------+
+id	              | INTEGER |
+city	            | VARCHAR |
+household_income	| INTEGER |
+----------------------------+
+
+Output:
+------------------------+
+Column	      | Type    |
+------------------------+
+city	        | VARCHAR |
+median_income	| INTEGER |
+------------------------+
+
+
+SOLUTION 1 (MAX CASE WHEN)
+WITH CTE AS (
+    SELECT 
+        city,
+        household_income,
+        ROW_NUMBER() OVER (PARTITION BY city ORDER BY household_income ASC) as income_rank,
+        COUNT(*) OVER (PARTITION BY city) as total_rows
+    FROM survey_responses
+)
+
+SELECT
+    city,
+    CASE
+        WHEN total_rows % 2 = 1 THEN
+            MAX(CASE WHEN income_rank = (total_rows + 1) / 2 THEN household_income END)
+        ELSE
+            (MAX(CASE WHEN income_rank = total_rows / 2 THEN household_income END) +
+             MAX(CASE WHEN income_rank = (total_rows / 2) + 1 THEN household_income END)) / 2
+    END AS median_income
+FROM CTE
+GROUP BY city, total_rows;
+
+
+SOLUTION 2 (SELECTb(SELECT
+WITH CTE AS (
+    SELECT 
+        city,
+        household_income,
+        ROW_NUMBER() OVER (PARTITION BY city ORDER BY household_income ASC) as income_rank,
+        COUNT(*) OVER (PARTITION BY city) as total_rows
+    FROM survey_responses
+)
+
+SELECT
+    city,
+    CASE
+        WHEN total_rows % 2 = 1 THEN
+            (SELECT household_income 
+             FROM CTE AS sub 
+             WHERE sub.city = cte.city AND sub.income_rank = (total_rows + 1) / 2)
+        ELSE
+            ( (SELECT household_income 
+                FROM CTE AS sub1 
+                WHERE sub1.city = cte.city AND sub1.income_rank = total_rows / 2) + 
+              (SELECT household_income 
+                FROM CTE AS sub2 
+                WHERE sub2.city = cte.city AND sub2.income_rank = (total_rows / 2) + 1)
+            ) / 2
+    END AS median_income
+FROM CTE
+GROUP BY city, total_rows;
