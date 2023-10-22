@@ -1,0 +1,47 @@
+The sales department is conducting a performance review and is interested in trends in product sales. 
+They have decided to use a weighted moving average as part of their analysis.
+
+Write a SQL query to 
+1. calculate the 3-day weighted moving average of sales for each product.
+2.Use the weights 0.5 for the current day, 0.3 for the previous day, and 0.2 for the day before that.
+
+Note: Only output the weighted moving average for dates that have two or more preceding dates. You may assume that the table doesn’t skip dates.
+
+Example:
+Input:
+sales table
+------------------------+
+Column	      |   Type  |
+------------------------+
+date	        |   DATE  |
+product_id	  | INTEGER |
+sales_volume	| INTEGER |
+------------------------+
+Output:
+---------------------------+
+Column	           | Type  |
+---------------------------+
+date	             | DATE  |
+product_id	       |INTEGER|
+weighted_avg_sales |FLOAT  |
+---------------------------+
+
+SOLUTION
+WITH CTE AS(
+SELECT 
+    product_id,
+    date,
+    sales_volume,
+    LAG(sales_volume,1) OVER(PARTITION BY product_id ORDER BY date) AS lag1,
+    LAG(sales_volume,2) OVER(PARTITION BY product_id ORDER BY date) AS lag2,
+    COUNT(*) OVER(PARTITION BY product_id 
+        ORDER BY date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS num_days
+FROM sales) 
+
+SELECT  
+    date,
+    product_id,
+    0.5*sales_volume+0.3*lag1+0.2*lag2 AS weighted_avg_sales
+FROM CTE
+WHERE lag1 is not null AND lag2 is not null AND num_days=3
+ORDER BY date, product_id
