@@ -9,11 +9,11 @@ Input:
 
 search_results table
 +---------------------+
-| Column    | Type    |
+| Column    |  Type   |
 ----------------------+
 | query	    | VARCHAR |
 | result_id | INTEGER |
-| position	| INTEGER |
+| position  | INTEGER |
 | rating	| INTEGER |
 +---------------------+
 
