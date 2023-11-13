@@ -21,7 +21,7 @@ search_results table
 2. You want to be able to compute a metric that measures the precision of the ranking system based on position. 
 For example, if the results for dog and cat are…
 +------------------------------------------------------------+
-| query	| result_id	| position | rating |      notes         |
+| query	| result_id | position | rating |      notes         |
 |------------------------------------------------------------|
 |  dog  |    1000   |    1     |    2   | picture of hotdog  |
 |  dog  |    1998   |    2     |    4	| dog walking        |
