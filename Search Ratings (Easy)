@@ -37,7 +37,7 @@ Round the metric (avg_rating column) to 2 decimal places.
 
 Output:
 +----------------------+
-| Column	 |  Type   |
+| Column     |  Type   |
 |----------------------|
 | query	     | VARCHAR |
 | avg_rating |  FLOAT  | 
