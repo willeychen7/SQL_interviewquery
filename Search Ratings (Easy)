@@ -14,7 +14,7 @@ search_results table
 | query	    | VARCHAR |
 | result_id | INTEGER |
 | position  | INTEGER |
-| rating	| INTEGER |
+| rating    | INTEGER |
 +---------------------+
 
 1. Write a query to compute a metric to measure the quality of the search results for each query. 
@@ -23,12 +23,12 @@ For example, if the results for dog and cat are…
 +------------------------------------------------------------+
 | query	| result_id	| position | rating |      notes         |
 |------------------------------------------------------------|
-|  dog	|    1000	|    1	   |    2   | picture of hotdog  |
-|  dog  |    1998   |    2	   |    4	| dog walking        |
-|  dog	|     342	|    3	   |    1	| zebra              |
-|  cat	|     123   |    1	   |    4   | picture of cat     |
-|  cat  |  	  435	|    2	   |    2	| cat memes          |
-|  cat	|  	  545	|    3	   |    1	| pizza shops        |
+|  dog	|    1000   |    1     |    2   | picture of hotdog  |
+|  dog  |    1998   |    2     |    4	| dog walking        |
+|  dog	|     342   |    3     |    1	| zebra              |
+|  cat	|     123   |    1     |    4   | picture of cat     |
+|  cat  |     435   |    2     |    2	| cat memes          |
+|  cat	|     545   |    3     |    1	| pizza shops        |
 +------------------------------------------------------------+
 we would rank ‘cat’ as having a better search result ranking precision than ‘dog’ based on the correct sorting by rating.
 
