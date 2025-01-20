@@ -1,39 +1,48 @@
 Given the tables users and rides, write a query to report the distance traveled by each user in descending order.
 
+HINT:
+1. Since the question is asking for the distance travelled by each user and there may be users who have not travelled any distance, 
+    LEFT JOIN is needed so each user from the Users table will be included.
+2. For those users who have not travelled, functions such as IFNULL() or COALESCE() are needed to return 0 instead of null for their 
+    total distance. The two functions are a little bit different, but for this question, they can be used interchangeably.
+
 Example:
 Input:
 users table
------------------+
-Column |	Type   |
------------------+
-id	   | INTEGER |
-name	 | INTEGER |
------------------+
+------------------+
+Column  |	Type  |
+------------------+
+id	    | INTEGER |
+name    | INTEGER |
+------------------+
 
 rides table
 ----------------------------+
 Column            | Type    |
 ----------------------------+
-id	              | INTEGER |
-passenger_user_id	| INTEGER |
-distance	        | FLOAT   |
+id                | INTEGER |
+passenger_user_id | INTEGER |
+distance	      | FLOAT   |
 ----------------------------+
+
+
 Output:
-----------------------------+
-Column	          | Type    |
-----------------------------+
+------------------------------+
+Column	            | Type    |
+------------------------------+
 name	            | VARCHAR |
 distance_traveled	| FLOAT   |
-----------------------------+
+------------------------------+
 
 
 SOLUTION.
+
 SELECT 
     name,
     COALESCE(SUM(distance),0) AS distance_traveled
-    
 FROM users u
 LEFT JOIN rides r 
 ON u.id = r.passenger_user_id
 GROUP BY name
 ORDER BY distance DESC
+
